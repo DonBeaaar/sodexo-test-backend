@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 @Entity
@@ -57,6 +59,13 @@ public class News {
     }
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+    @PrePersist
+    @PreUpdate
+    public void truncateSummary() {
+        if (summary != null && summary.length() > 255) {
+            summary = summary.substring(0, 255);
+        }
     }
     public String getPublished_at() {
         return published_at;
